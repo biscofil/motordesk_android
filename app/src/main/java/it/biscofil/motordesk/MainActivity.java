@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     CheckBox cbLeft;
     CheckBox cbRight;
 
+    ImageView iv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,11 +32,27 @@ public class MainActivity extends AppCompatActivity {
 
         v = findViewById(R.id.constraintLayout);
 
+        iv = findViewById(R.id.imageView);
+
         TemporaryButton DownBtn = findViewById(R.id.btnDown);
         TemporaryButton UpBtn = findViewById(R.id.btnUp);
 
         cbLeft = findViewById(R.id.checkBoxLeft);
         cbRight = findViewById(R.id.checkBoxRight);
+
+        cbLeft.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                updateImage();
+            }
+        });
+
+        cbRight.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                updateImage();
+            }
+        });
 
         final MainActivity self = this;
 
@@ -43,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         UpBtn.setTask(new GenericListener() {
             @Override
             public void onTrigger() {
@@ -51,6 +70,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void updateImage() {
+        if (cbLeft.isChecked() && cbRight.isChecked()) {
+            iv.setImageResource(R.drawable.elon_both);
+        } else if (cbLeft.isChecked()) {
+            iv.setImageResource(R.drawable.elon_left);
+        } else if (cbRight.isChecked()) {
+            iv.setImageResource(R.drawable.elon_right);
+        }
     }
 
     private void move(String mode) {
@@ -72,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
             s = "l"; // left only
         } else if (cbRight.isChecked()) {
             s = "r"; //right only
+        } else {
+            //neither
+            return;
         }
         params.put("s", s); //side
 
