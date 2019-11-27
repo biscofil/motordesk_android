@@ -8,8 +8,8 @@ import android.widget.CheckBox;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.SyncHttpClient;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import cz.msebera.android.httpclient.Header;
@@ -59,12 +59,13 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("BISCOFIL", "request with" + mode);
 
-        SyncHttpClient client = new SyncHttpClient();
+        AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
 
         params.put("d", mode);
 
         String s = "-";
+
         if (cbLeft.isChecked() && cbRight.isChecked()) {
             s = "b"; // both
         } else if (cbLeft.isChecked()) {
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("BISCOIL", params.toString());
 
-        client.setMaxRetriesAndTimeout(0, 1000);
+        client.setMaxRetriesAndTimeout(0, 100);
         client.get("http://192.168.1.204", params, new TextHttpResponseHandler() {
 
                     @Override

@@ -1,6 +1,8 @@
 package it.biscofil.motordesk;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,9 +18,21 @@ public class TemporaryButton extends AppCompatButton {
 
     public Timer timer;
 
-    class SayHello extends TimerTask {
+    class ExecuteAction extends TimerTask {
         public void run() {
-            task.onTrigger();
+
+            Handler mainHandler = new Handler(Looper.getMainLooper());
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+
+                    task.onTrigger();
+
+                }
+            };
+
+            mainHandler.post(myRunnable);
+
         }
     }
 
@@ -39,7 +53,7 @@ public class TemporaryButton extends AppCompatButton {
                 if (action == MotionEvent.ACTION_DOWN) {
 
                     timer = new Timer();
-                    timer.schedule(new SayHello(), 0, 1000);
+                    timer.schedule(new ExecuteAction(), 0, 500);
 
                 } else if (action == MotionEvent.ACTION_UP) {
 
